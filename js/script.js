@@ -63,6 +63,11 @@ const alterarGif = () => {
 }
 
 const gerarBandeira = (array) => {
+    
+    if(typeof array === 'undefined'){
+        array = paisesOrdenados
+    }
+
     alterarGif()
     const elLoading = document.querySelector('#loading')
     const box = document.querySelector('.box')
