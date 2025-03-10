@@ -22,13 +22,20 @@ body, html {
 }
 
 #imgBandeira {
-    width: 600px;
+    max-width: 600px;
+    max-height: 350px;
     box-shadow: 0 0 40px 2px rgba(255, 255, 255, 0.2);
     animation: fadeIn 2s backwards;
 }
 #nomeBandeira{
     min-height: 50px;
     animation: fadeIn 1s backwards;
+}
+
+#info {
+    text-align: center;
+    font-weight: 300;
+    min-height: 80px;
 }
 
 #loading {
