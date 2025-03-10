@@ -29,13 +29,17 @@ body, html {
 }
 #nomeBandeira{
     min-height: 50px;
+    font-size: 32px;
     animation: fadeIn 1s backwards;
 }
 
 #info {
+    margin-top: 25px;
     text-align: center;
     font-weight: 300;
     min-height: 80px;
+    animation: fadeIn 1s backwards;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 #loading {
