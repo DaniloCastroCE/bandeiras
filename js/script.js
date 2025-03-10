@@ -108,7 +108,7 @@ const gerarBandeira = (array) => {
                 result.forEach((textInfo, index) => {
                     if(index === 0){
                         const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
-                        texto = `Região: ${regiao}<br> Idioma:`
+                        texto = `Região ${regiao}<br> Idioma`
 
                     }else if (index > 0){
                         const idioma = textInfo.responseData.translatedText
@@ -121,8 +121,8 @@ const gerarBandeira = (array) => {
                     }
                 })
                 //console.log(texto)
-                info.innerHTML += `Sigla: ${array[num].cca3}<br>`
-                info.innerHTML += `População: ${array[num].population}<br>`
+                info.innerHTML += `Sigla ${array[num].cca3}<br>`
+                info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
                 info.innerHTML += texto
             }
         )
