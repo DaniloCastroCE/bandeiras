@@ -32,6 +32,7 @@ body, html {
     min-height: 50px;
     font-size: 32px;
     animation: fadeIn 1s backwards;
+    text-align: center;
 }
 
 #info {
