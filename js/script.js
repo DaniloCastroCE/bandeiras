@@ -144,6 +144,7 @@ const gerarBandeira = (array) => {
 
 const falar = (texto) => {
     const iconSpeak = document.querySelector('#boxIconSpeak')
+    const imgBandeira = document.querySelector('#imgBandeira')
     const utterance = new SpeechSynthesisUtterance(texto)
     utterance.lang = 'pt-BR'
     utterance.rate = 1
@@ -169,11 +170,13 @@ const falar = (texto) => {
     utterance.onstart = () => {
         speak = true
         iconSpeak.style.display = 'block'
+        imgBandeira.style.cursor = 'default'
     }
 
     utterance.onend = () => {
         speak = false
         iconSpeak.style.display = 'none'
+        imgBandeira.style.cursor = 'pointer'
     }
 
     window.speechSynthesis.speak(utterance)
