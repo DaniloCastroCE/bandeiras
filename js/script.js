@@ -47,7 +47,8 @@ document.querySelector('body').addEventListener('keydown', (event) => {
 
 getApi('https://restcountries.com/v3.1/all', (result) => {
     paises = result
-    paisesOrdenados = ordenarPopulacao(result,150)
+    paisesOrdenados = ordenarPopulacao(result,250)
+    console.log(`Array paises (${paises.length})\nArray paisesOrdenados (${paisesOrdenados.length})`)
 })
 
 const ordenarPopulacao = (array,max) => {
