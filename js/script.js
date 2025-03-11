@@ -47,7 +47,7 @@ document.querySelector('body').addEventListener('keydown', (event) => {
 
 getApi('https://restcountries.com/v3.1/all', (result) => {
     paises = result
-    paisesOrdenados = ordenarPopulacao(result,100)
+    paisesOrdenados = ordenarPopulacao(result,150)
 })
 
 const ordenarPopulacao = (array,max) => {
@@ -126,6 +126,7 @@ const gerarBandeira = (array) => {
                         }
                     })
                     //console.log(texto)
+                    info.innerHTML += `${nomeIngles}<br>`
                     info.innerHTML += `Sigla ${array[num].cca3}<br>`
                     info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
                     info.innerHTML += texto
