@@ -160,6 +160,8 @@ const gerarBandeira = (array) => {
             elLoading.style.display = 'none'
             box.style.display = 'flex'
             loading = false
+            const gif = document.querySelector('#gifLoading')
+            gif.src = ""
         }, 3000);
     }
 
