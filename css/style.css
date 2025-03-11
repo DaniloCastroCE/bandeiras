@@ -55,7 +55,7 @@ body, html {
     margin-top: 10px;
     text-align: center;
     font-weight: 300;
-    min-height: 80px;
+    min-height: 100px;
     animation: fadeIn 1s backwards;
     color: rgba(255, 255, 255, 0.6);
 }
