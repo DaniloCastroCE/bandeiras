@@ -40,7 +40,7 @@ let speak = false
 
 document.querySelector('body').addEventListener('keydown', (event) => {
     const key = event.key
-    if ((key === 'Enter' || key === ' ') && !loading && !speak) {
+    if (key === 'Enter' || key === ' ') {
         gerarBandeira(paisesOrdenados)
     }
 })
@@ -63,85 +63,87 @@ const alterarGif = () => {
 }
 
 const gerarBandeira = (array) => {
-    
-    if(typeof array === 'undefined'){
-        array = paisesOrdenados
-    }
-
-    alterarGif()
-    const elLoading = document.querySelector('#loading')
-    const box = document.querySelector('.box')
-    const img = document.querySelector('#imgBandeira')
-    const nome = document.querySelector('#nomeBandeira')
-    const info = document.querySelector('#info')
-    const num = Math.floor(Math.random() * (array.length))
-    const nomeIngles = array[num].name.common.toUpperCase()
-
-    //console.log(array[num])
-
-    img.src = ''
-    nome.innerHTML = ''
-    info.innerHTML = ''
-    box.style.display = 'none'
-    elLoading.style.display = 'flex'
-    loading = true
-    setTimeout(() => {
-        getApi(
-            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(nomeIngles)}&langpair=en|pt`,
-            (result) => {
-                const nomeBandeira = (result.responseData.translatedText !== '') ?
-                    result.responseData.translatedText.toUpperCase() :
-                    nomeIngles
-                nome.innerHTML = nomeBandeira
-                falar(nomeBandeira)
-            }
-        )
-
-        let urls = [`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].region)}&langpair=en|pt`]
-        for (let i = 0; i < Object.keys(array[num].languages).length; i++) {
-            urls.push(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].languages)[i])}&langpair=en|pt`)
+    if(!loading && !speak){
+        if(typeof array === 'undefined'){
+            array = paisesOrdenados
         }
-
-        //console.log(urls)
-
-        
-
-        getApiMult(
-            urls,
-            (result) => {
-                let texto = ''
-                result.forEach((textInfo, index) => {
-                    if(index === 0){
-                        const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
-                        texto = `Região ${regiao}<br> Idioma`
-
-                    }else if (index > 0){
-                        const idioma = textInfo.responseData.translatedText
-                        texto += ` ${idioma.charAt(0).toUpperCase() + idioma.slice(1).toLowerCase()}`
-                        if(index+2 < result.length){
-                            texto += ', '
-                        }else if((index+2 === result.length)){
-                            texto += ' e '
-                        }
-                    }
-                })
-                //console.log(texto)
-                info.innerHTML += `Sigla ${array[num].cca3}<br>`
-                info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
-                info.innerHTML += texto
+    
+        alterarGif()
+        const elLoading = document.querySelector('#loading')
+        const box = document.querySelector('.box')
+        const img = document.querySelector('#imgBandeira')
+        const nome = document.querySelector('#nomeBandeira')
+        const info = document.querySelector('#info')
+        const num = Math.floor(Math.random() * (array.length))
+        const nomeIngles = array[num].name.common.toUpperCase()
+    
+        //console.log(array[num])
+    
+        img.src = ''
+        nome.innerHTML = ''
+        info.innerHTML = ''
+        box.style.display = 'none'
+        elLoading.style.display = 'flex'
+        loading = true
+        setTimeout(() => {
+            getApi(
+                `https://api.mymemory.translated.net/get?q=${encodeURIComponent(nomeIngles)}&langpair=en|pt`,
+                (result) => {
+                    const nomeBandeira = (result.responseData.translatedText !== '') ?
+                        result.responseData.translatedText.toUpperCase() :
+                        nomeIngles
+                    nome.innerHTML = nomeBandeira
+                    falar(nomeBandeira)
+                }
+            )
+    
+            let urls = [`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].region)}&langpair=en|pt`]
+            for (let i = 0; i < Object.keys(array[num].languages).length; i++) {
+                urls.push(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].languages)[i])}&langpair=en|pt`)
             }
-        )
-
-        document.querySelector('#favicon').href = array[num].flags.png
-        img.src = array[num].flags.svg
-        elLoading.style.display = 'none'
-        box.style.display = 'flex'
-        loading = false
-    }, 3000);
+    
+            //console.log(urls)
+    
+            
+    
+            getApiMult(
+                urls,
+                (result) => {
+                    let texto = ''
+                    result.forEach((textInfo, index) => {
+                        if(index === 0){
+                            const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
+                            texto = `Região ${regiao}<br> Idioma`
+    
+                        }else if (index > 0){
+                            const idioma = textInfo.responseData.translatedText
+                            texto += ` ${idioma.charAt(0).toUpperCase() + idioma.slice(1).toLowerCase()}`
+                            if(index+2 < result.length){
+                                texto += ', '
+                            }else if((index+2 === result.length)){
+                                texto += ' e '
+                            }
+                        }
+                    })
+                    //console.log(texto)
+                    info.innerHTML += `Sigla ${array[num].cca3}<br>`
+                    info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
+                    info.innerHTML += texto
+                }
+            )
+    
+            document.querySelector('#favicon').href = array[num].flags.png
+            img.src = array[num].flags.svg
+            elLoading.style.display = 'none'
+            box.style.display = 'flex'
+            loading = false
+        }, 3000);
+    }
 
 }
 
 const falar = (texto) => {
+    const iconSpeak = document.querySelector('#boxIconSpeak')
     const utterance = new SpeechSynthesisUtterance(texto)
     utterance.lang = 'pt-BR'
     utterance.rate = 1
@@ -166,10 +168,12 @@ const falar = (texto) => {
 
     utterance.onstart = () => {
         speak = true
+        iconSpeak.style.display = 'block'
     }
 
     utterance.onend = () => {
         speak = false
+        iconSpeak.style.display = 'none'
     }
 
     window.speechSynthesis.speak(utterance)
