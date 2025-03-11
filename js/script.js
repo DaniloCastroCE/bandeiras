@@ -37,6 +37,7 @@ let paises = []
 let paisesOrdenados = []
 let loading = false
 let speak = false
+let mapGoogle = ''
 
 document.querySelector('body').addEventListener('keydown', (event) => {
     const key = event.key
@@ -49,6 +50,7 @@ getApi('https://restcountries.com/v3.1/all', (result) => {
     paises = result
     paisesOrdenados = ordenarPopulacao(result,250)
     console.log(`Array paises (${paises.length})\nArray paisesOrdenados (${paisesOrdenados.length})`)
+    console.log(paisesOrdenados)
 })
 
 const ordenarPopulacao = (array,max) => {
@@ -57,10 +59,21 @@ const ordenarPopulacao = (array,max) => {
 
 
 const alterarGif = () => {
-    const max = 10
+    const max = 30
     const gif = document.querySelector('#gifLoading')
     const num = Math.floor(Math.random() * max) + 1
     gif.src = `./img/loading${num}.gif`
+    
+}
+
+const on_mapGoogle = () => {
+    let linkMap = ''
+    if(mapGoogle === ""){
+        const brasil = paisesOrdenados.find( b => b.name.common.toLowerCase() === 'brazil')
+        mapGoogle = brasil.maps.googleMaps
+    }
+
+    window.open(mapGoogle, '_blank');
 }
 
 const gerarBandeira = (array) => {
@@ -77,6 +90,7 @@ const gerarBandeira = (array) => {
         const info = document.querySelector('#info')
         const num = Math.floor(Math.random() * (array.length))
         const nomeIngles = array[num].name.common.toUpperCase()
+        mapGoogle = array[num].maps.googleMaps
     
         //console.log(array[num])
     
