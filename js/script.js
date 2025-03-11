@@ -131,8 +131,15 @@ const gerarBandeira = (array) => {
                     info.innerHTML += `Sigla ${array[num].cca3}<br>`
                     info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
                     info.innerHTML += texto
+
                 }
             )
+
+            /*getApi(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].flags.alt)}&langpair=en|pt`, 
+                (result) => {
+                    alert(result.responseData.translatedText)
+                }
+            )*/
     
             document.querySelector('#favicon').href = array[num].flags.png
             img.src = array[num].flags.svg
