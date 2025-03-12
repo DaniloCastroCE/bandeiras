@@ -131,7 +131,7 @@ const gerarBandeira = (array) => {
                     result.forEach((textInfo, index) => {
                         if(index === 0){
                             const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
-                            texto = `Região ${regiao}<br> Idioma`
+                            texto = `Região da ${regiao}<br> Idioma:`
     
                         }else if (index > 0){
                             const idioma = textInfo.responseData.translatedText
@@ -145,8 +145,9 @@ const gerarBandeira = (array) => {
                     })
                     //console.log(texto)
                     info.innerHTML += `${nomeIngles}<br>`
-                    info.innerHTML += `Sigla ${array[num].cca3}<br>`
-                    info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
+                    info.innerHTML += `Sigla: ${array[num].cca3}<br>`
+                    info.innerHTML += `(${num+1}º) População com ${array[num].population.toLocaleString('pt-BR')}<br>`
+                    info.innerHTML += `Área de ${array[num].area.toLocaleString('pt-BR')} Km²<br>`
                     info.innerHTML += texto
                     if(array[num].coatOfArms.svg !== undefined) brasao.src = array[num].coatOfArms.svg
                 }
