@@ -130,6 +130,7 @@ const gerarBandeira = (array) => {
         const info = document.querySelector('#info')
         const brasao = document.querySelector('#brasao')
         const num = Math.floor(Math.random() * (array.length))
+        //const num = 249
         const nomeIngles = array[num].name.common.toUpperCase()
         mapGoogle = array[num].maps.googleMaps
 
