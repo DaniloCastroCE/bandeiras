@@ -64,13 +64,31 @@ body, html {
     text-align: center;
 }
 
-#info {
+.boxInfo{
     margin-top: 10px;
+    flex-direction: row;
+    gap: 20px;
+}
+
+#info {
     text-align: center;
     font-weight: 300;
     min-height: 100px;
-    animation: fadeIn 1s backwards;
+    max-width: 450px;
+    animation: fadeIn 1s forwards;
     color: rgba(255, 255, 255, 0.6);
+}
+
+#brasao {
+    height: 80px;
+    transition: transform 0.5s ease-in-out;
+}
+
+#brasao:hover {
+    transform: scale(3) translateY(-25px);
+    background-color: rgb(255,255,255);
+    border-radius: 10px;
+    padding: 5px;
 }
 
 #loading {

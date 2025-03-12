@@ -89,6 +89,7 @@ const gerarBandeira = (array) => {
         const img = document.querySelector('#imgBandeira')
         const nome = document.querySelector('#nomeBandeira')
         const info = document.querySelector('#info')
+        const brasao = document.querySelector('#brasao')
         const num = Math.floor(Math.random() * (array.length))
         const nomeIngles = array[num].name.common.toUpperCase()
         mapGoogle = array[num].maps.googleMaps
@@ -98,6 +99,7 @@ const gerarBandeira = (array) => {
         img.src = ''
         nome.innerHTML = ''
         info.innerHTML = ''
+        brasao.src = ''
         box.style.display = 'none'
         elLoading.style.display = 'flex'
         loading = true
@@ -146,7 +148,7 @@ const gerarBandeira = (array) => {
                     info.innerHTML += `Sigla ${array[num].cca3}<br>`
                     info.innerHTML += `População (${num+1}º) ${array[num].population}<br>`
                     info.innerHTML += texto
-
+                    if(array[num].coatOfArms.svg !== undefined) brasao.src = array[num].coatOfArms.svg
                 }
             )
 
