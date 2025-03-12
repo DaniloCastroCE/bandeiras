@@ -78,7 +78,7 @@ body, html {
 #info {
     text-align: center;
     font-weight: 300;
-    min-height: 100px;
+    min-height: 115px;
     max-width: 450px;
     animation: fadeIn 1s forwards;
     color: rgba(255, 255, 255, 0.6);

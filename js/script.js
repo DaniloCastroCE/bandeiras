@@ -33,8 +33,22 @@ const getApiMult = async (urls, callback) => {
     }
 };
 
+const init = (obj) => {
+    const info = document.querySelector('#info')
+    const brasao = document.querySelector('#brasao')
+    const pos = posAreaPais(areaOrdenada, obj.name.common)
+    const textPosArea = (pos > 0) ? `(${pos}º) ` : ''
+    info.innerHTML = `${obj.name.common.toUpperCase()}<br>`
+    info.innerHTML += `Sigla: ${obj.cca3}<br>`
+    info.innerHTML += `(6º) População com ${obj.population.toLocaleString('pt-BR')}<br>`
+    info.innerHTML += `${textPosArea}Área de ${obj.area.toLocaleString('pt-BR')} Km²<br>`
+    info.innerHTML += "Região das Americas<br>Idioma: Portuguese"
+    if (obj.coatOfArms.svg !== undefined) brasao.src = obj.coatOfArms.svg
+}
+
 let paises = []
 let paisesOrdenados = []
+let areaOrdenada = []
 let loading = false
 let speak = false
 let mapGoogle = ''
@@ -48,13 +62,37 @@ document.querySelector('body').addEventListener('keydown', (event) => {
 
 getApi('https://restcountries.com/v3.1/all', (result) => {
     paises = result
-    paisesOrdenados = ordenarPopulacao(result,250)
+    paisesOrdenados = ordenarPopulacao(result, 250)
+    areaOrdenada = returnOrdenadoArea(paises)
     console.log(`Array paises (${paises.length})\nArray paisesOrdenados (${paisesOrdenados.length})`)
     console.log(paisesOrdenados)
+
+    init(result.find(pais => pais.name.common === 'Brazil'))
 })
 
-const ordenarPopulacao = (array,max) => {
-    return array.sort((a, b) => b.population - a.population).slice(0, max);
+
+
+const ordenarPopulacao = (array, max) => {
+    return array.sort((a, b) => b.population - a.population).slice(0, max)
+}
+
+const returnOrdenadoArea = (array) => {
+    let paises = array.map(
+        pais => ({ nome: pais.name.common, area: pais.area })
+    ).sort(
+        (a, b) => b.area - a.area
+    )
+    return paises.filter(pais => pais.nome !== 'Antarctica')
+}
+
+const posAreaPais = (array, nome) => {
+    if (nome !== 'Antarctica') {
+        return array.findIndex(
+            pais => pais.nome.toLowerCase().trim() === nome.toLowerCase().trim()
+        ) + 1
+    } else {
+        return 0
+    }
 }
 
 
@@ -63,13 +101,13 @@ const alterarGif = () => {
     const gif = document.querySelector('#gifLoading')
     const num = Math.floor(Math.random() * max) + 1
     gif.src = `./img/loading${num}.gif`
-    
+
 }
 
 const on_mapGoogle = () => {
     let linkMap = ''
-    if(mapGoogle === ""){
-        const brasil = paisesOrdenados.find( b => b.name.common.toLowerCase() === 'brazil')
+    if (mapGoogle === "") {
+        const brasil = paisesOrdenados.find(b => b.name.common.toLowerCase() === 'brazil')
         mapGoogle = brasil.maps.googleMaps
     }
 
@@ -77,12 +115,12 @@ const on_mapGoogle = () => {
 }
 
 const gerarBandeira = (array) => {
-    if(!loading && !speak){
+    if (!loading && !speak) {
         const gif = document.querySelector('#gifLoading')
         gif.src = ""
-        if(typeof array === 'undefined'){
+        if (typeof array === 'undefined') {
             array = paisesOrdenados
-        }    
+        }
         alterarGif()
         const elLoading = document.querySelector('#loading')
         const box = document.querySelector('.box')
@@ -93,9 +131,9 @@ const gerarBandeira = (array) => {
         const num = Math.floor(Math.random() * (array.length))
         const nomeIngles = array[num].name.common.toUpperCase()
         mapGoogle = array[num].maps.googleMaps
-    
+
         //console.log(array[num])
-    
+
         img.src = ''
         nome.innerHTML = ''
         info.innerHTML = ''
@@ -114,42 +152,44 @@ const gerarBandeira = (array) => {
                     falar(nomeBandeira)
                 }
             )
-    
+
             let urls = [`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].region)}&langpair=en|pt`]
             for (let i = 0; i < Object.keys(array[num].languages).length; i++) {
                 urls.push(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].languages)[i])}&langpair=en|pt`)
             }
-    
+
             //console.log(urls)
-    
-            
-    
+
+
+
             getApiMult(
                 urls,
                 (result) => {
                     let texto = ''
                     result.forEach((textInfo, index) => {
-                        if(index === 0){
+                        if (index === 0) {
                             const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
                             texto = `Região da ${regiao}<br> Idioma:`
-    
-                        }else if (index > 0){
+
+                        } else if (index > 0) {
                             const idioma = textInfo.responseData.translatedText
                             texto += ` ${idioma.charAt(0).toUpperCase() + idioma.slice(1).toLowerCase()}`
-                            if(index+2 < result.length){
+                            if (index + 2 < result.length) {
                                 texto += ', '
-                            }else if((index+2 === result.length)){
+                            } else if ((index + 2 === result.length)) {
                                 texto += ' e '
                             }
                         }
                     })
                     //console.log(texto)
+                    const pos = posAreaPais(areaOrdenada, nomeIngles)
+                    const textPosArea = (pos > 0) ? `(${pos}º) ` : ''
                     info.innerHTML += `${nomeIngles}<br>`
                     info.innerHTML += `Sigla: ${array[num].cca3}<br>`
-                    info.innerHTML += `(${num+1}º) População com ${array[num].population.toLocaleString('pt-BR')}<br>`
-                    info.innerHTML += `Área de ${array[num].area.toLocaleString('pt-BR')} Km²<br>`
+                    info.innerHTML += `(${num + 1}º) População com ${array[num].population.toLocaleString('pt-BR')}<br>`
+                    info.innerHTML += `${textPosArea}Área de ${array[num].area.toLocaleString('pt-BR')} Km²<br>`
                     info.innerHTML += texto
-                    if(array[num].coatOfArms.svg !== undefined) brasao.src = array[num].coatOfArms.svg
+                    if (array[num].coatOfArms.svg !== undefined) brasao.src = array[num].coatOfArms.svg
                 }
             )
 
@@ -158,7 +198,7 @@ const gerarBandeira = (array) => {
                     alert(result.responseData.translatedText)
                 }
             )*/
-    
+
             document.querySelector('#favicon').href = array[num].flags.png
             img.src = array[num].flags.svg
             elLoading.style.display = 'none'
