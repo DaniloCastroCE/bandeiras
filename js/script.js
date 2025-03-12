@@ -44,6 +44,7 @@ const init = (obj) => {
     info.innerHTML += `${textPosArea}Área de ${obj.area.toLocaleString('pt-BR')} Km²<br>`
     info.innerHTML += "Região das Americas<br>Idioma: Portuguese"
     if (obj.coatOfArms.svg !== undefined) brasao.src = obj.coatOfArms.svg
+    falar('Brasil')
 }
 
 let paises = []
@@ -253,8 +254,4 @@ const falar = (texto) => {
     window.speechSynthesis.speak(utterance)
 }
 
-window.onload = () => {
-    alterarGif()
-    falar("Brasil")
-}
 

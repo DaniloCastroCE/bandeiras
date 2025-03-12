@@ -89,6 +89,7 @@ body, html {
 #brasao {
     height: 80px;
     transition: transform 0.5s ease-in-out;
+    animation: fadeIn 2s backwards;
 }
 
 #brasao:hover {
