@@ -45,6 +45,11 @@ body, html {
     height: 20px;
 }
 
+#mapGoogle:hover{
+    transform: scale(1.4);
+    transition: all 0.5s ease-in-out;
+}
+
 .box {
     height: 100%;
     flex-direction: column;
@@ -133,6 +138,13 @@ body, html {
 
 @media (max-width: 600px){
     #imgBandeira{
+        width: 100%;
+        padding: 0 15px;
+    }
+    .boxInfo {
+        flex-direction: column;
+    }
+    #info {
         width: 100%;
         padding: 0 15px;
     }
