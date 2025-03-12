@@ -41,8 +41,10 @@ body, html {
 }
 
 #mapGoogle svg {
+    /*
     width: 20px;
     height: 20px;
+    */
 }
 
 #mapGoogle:hover{
