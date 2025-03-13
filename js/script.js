@@ -45,6 +45,7 @@ const init = (obj) => {
     info.innerHTML += "Região das Americas<br>Idioma: Portuguese"
     if (obj.coatOfArms.svg !== undefined) brasao.src = obj.coatOfArms.svg
     falar('Brasil')
+    paisSelecionado = 'Brasil'
 }
 
 let paises = []
@@ -53,6 +54,7 @@ let areaOrdenada = []
 let loading = false
 let speak = false
 let mapGoogle = ''
+let paisSelecionado = ''
 
 document.querySelector('body').addEventListener('keydown', (event) => {
     const key = event.key
@@ -152,6 +154,7 @@ const gerarBandeira = (array) => {
                         nomeIngles
                     nome.innerHTML = nomeBandeira
                     falar(nomeBandeira)
+                    paisSelecionado = nomeBandeira
                 }
             )
 
@@ -215,7 +218,16 @@ const gerarBandeira = (array) => {
 
 }
 
+const onclickNome = () => {
+    if(!speak) {
+        falar()
+    }
+}
+
 const falar = (texto) => {
+    if(typeof texto === 'undefined'){
+        texto = paisSelecionado
+    }
     const iconSpeak = document.querySelector('#boxIconSpeak')
     const imgBandeira = document.querySelector('#imgBandeira')
     const utterance = new SpeechSynthesisUtterance(texto)

@@ -71,6 +71,10 @@ body, html {
     text-align: center;
 }
 
+#nomeBandeira:hover{
+    cursor: pointer;
+}
+
 .boxInfo{
     margin-top: 10px;
     flex-direction: row;
