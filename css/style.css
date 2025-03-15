@@ -84,20 +84,20 @@ body, html {
 #info {
     text-align: center;
     font-weight: 300;
-    min-height: 115px;
+    min-height: 135px;
     max-width: 450px;
     animation: fadeIn 1s forwards;
     color: rgba(255, 255, 255, 0.6);
 }
 
 #brasao {
-    height: 80px;
+    height: 100px;
     transition: transform 0.5s ease-in-out;
     animation: fadeIn 2s backwards;
 }
 
 #brasao:hover {
-    transform: scale(4) translateY(-25px) translateX(-15px);
+    transform: scale(3.8) translateY(-25px) translateX(-15px);
     transition: ease 0.6s;
     background-color: rgb(255,255,255);
     border-radius: 10px;

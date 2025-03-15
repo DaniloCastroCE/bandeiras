@@ -46,10 +46,12 @@ const init = (obj) => {
     const pos = posAreaPais(areaOrdenada, obj.name.common)
     const textPosArea = (pos > 0) ? `(${pos}º) ` : ''
     info.innerHTML = `${obj.name.common.toUpperCase()}<br>`
+    info.innerHTML += `Capital: Brasília<br>`
+    info.innerHTML += "Continente: Ámérica do Sul<br>"
     info.innerHTML += `Sigla: ${obj.cca3}<br>`
-    info.innerHTML += `(6º) População com ${obj.population.toLocaleString('pt-BR')}<br>`
-    info.innerHTML += `${textPosArea}Área de ${obj.area.toLocaleString('pt-BR')} Km²<br>`
-    info.innerHTML += "Região das Americas<br>Idioma: Portuguese"
+    info.innerHTML += `População com ${obj.population.toLocaleString('pt-BR')} &nbsp(6º)<br>`
+    info.innerHTML += `Área de ${obj.area.toLocaleString('pt-BR')} Km² &nbsp${textPosArea}<br>`
+    info.innerHTML += "Idioma: Português"
     if (obj.coatOfArms.svg !== undefined) brasao.src = obj.coatOfArms.svg
     falar('Brasil')
     paisSelecionado = 'Brasil'
@@ -124,6 +126,27 @@ const on_mapGoogle = () => {
     window.open(mapGoogle, '_blank');
 }
 
+const formatarPalavra = (palavra) => {
+    if(palavra === 'África:'){
+        palavra = 'África'
+    }else if (palavra === 'French') {
+        palavra = 'Francês'
+    }else if (palavra === 'Spanish') {
+        palavra = 'Espanhol'
+    }else if (palavra === 'Portuguese') {
+        palavra = 'Português'
+    }else if (palavra === 'Dutch') {
+        palavra = 'Holandês'
+    }else if (palavra === 'Finnish') {
+        palavra = 'Finlandês'
+    }else if (palavra === 'Swedish') {
+        palavra = 'Sueco'
+    }else if (palavra === 'Romanian') {
+        palavra = 'Romeno'
+    }
+    return palavra[0].toUpperCase() + palavra.slice(1).toLowerCase()
+} 
+
 const gerarBandeira = (array) => {
     if (!loading && !speak) {
         const gif = document.querySelector('#gifLoading')
@@ -166,66 +189,66 @@ const gerarBandeira = (array) => {
             )
 
             let urls = [{traduzir:"region",url:`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].region)}&langpair=en|pt`}]
+             
+            for (let i = 0; i < Object.keys(array[num].capital).length; i++) {
+                urls.push({traduzir:"capital",url:`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].capital)[i])}&langpair=en|pt`})
+                
+            }
+            
             for (let i = 0; i < Object.keys(array[num].languages).length; i++) {
                 urls.push({traduzir:"languages",url:`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].languages)[i])}&langpair=en|pt`})
             }
-
-            //console.log(urls)
-
-
+            
+            for (let i = 0; i < Object.keys(array[num].continents).length; i++) {
+                urls.push({traduzir:"continents",url:`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].continents)[i])}&langpair=en|pt`})
+                
+            }
 
             getApiMult(
                 urls,
                 (result) => {
-                    //console.log(result)
-                    let texto = ''
+                    let regiao = ''
                     let idioma = ''
+                    let continentes = ''
+                    let capital = ''
                     
-                    const region = result.filter(obj => obj.traduzir === 'region')
-                    const languages = result.filter(obj => obj.traduzir === 'languages')
+                    const arrayRegion = result.filter(obj => obj.traduzir === 'region')
+                    const arrayCapital = result.filter(obj => obj.traduzir === 'capital')
+                    const arrayLanguages = result.filter(obj => obj.traduzir === 'languages')
+                    const arrayContinents = result.filter(obj => obj.traduzir === 'continents')
+                                        
+                    regiao += formatarPalavra(arrayRegion[0].responseData.translatedText)
 
-                    result.forEach((textInfo, index) => {
-                        if (index === 0) {
-                            const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
-                            texto = `Região da ${regiao}<br> Idioma:`
+                    if(arrayCapital.length === 1){
+                        capital = formatarPalavra(arrayCapital[0].responseData.translatedText)
+                    }else {
+                        const nomes = arrayCapital.map(nome => formatarPalavra(nome.responseData.translatedText))
+                        capital = nomes.slice(0,-1).join(', ') + " e " + nomes[nomes.length - 1] 
+                    }
 
-                        } else if (index > 0) {
-                            const idioma = textInfo.responseData.translatedText
-                            texto += ` ${idioma.charAt(0).toUpperCase() + idioma.slice(1).toLowerCase()}`
-                            if (index + 2 < result.length) {
-                                texto += ', '
-                            } else if ((index + 2 === result.length)) {
-                                texto += ' e '
-                            }
-                        }
-                    })
-                    //console.log(texto)
+                    if(arrayLanguages.length === 1){
+                        idioma = formatarPalavra(arrayLanguages[0].responseData.translatedText)
+                    }else {
+                        const nomes = arrayLanguages.map(nome => formatarPalavra(nome.responseData.translatedText))
+                        idioma = nomes.slice(0,-1).join(', ') + " e " + nomes[nomes.length - 1] 
+                    }
 
-                    languages.forEach( (el, index) => {
-                        const traduzido = el.responseData.translatedText
-                        if(languages.length === 1){
-                            idioma += ` ${traduzido.charAt(0).toUpperCase() + traduzido.slice(1).toLowerCase()}`
-                        }else {
-                            idioma += ` ${traduzido.charAt(0).toUpperCase() + traduzido.slice(1).toLowerCase()}`
-                            
-                            if(index + 2  < languages.length){
-                                idioma += ','  
-                            }else if(index + 2 === languages.length){
-                                idioma += 'e'
-                            }
-                        }
-                        console.log(`Index ${index} + 2 | length ${languages.length}`)
-                    } )
-
-                    console.log(idioma)
+                    if(arrayContinents.length === 1){
+                        continentes = formatarPalavra(arrayContinents[0].responseData.translatedText)
+                    }else {
+                        const nomes = arrayContinents.map(nome => formatarPalavra(nome.responseData.translatedText))
+                        continentes += nomes.slice(0,-1).join(', ') + " e " + nomes[nomes.length - 1] 
+                    }
 
                     const pos = posAreaPais(areaOrdenada, nomeIngles)
                     const textPosArea = (pos > 0) ? `(${pos}º) ` : ''
                     info.innerHTML += `${nomeIngles}<br>`
+                    info.innerHTML += `Capital: ${capital}<br>`
+                    info.innerHTML += `Continente: ${continentes}<br>`
                     info.innerHTML += `Sigla: ${array[num].cca3}<br>`
-                    info.innerHTML += `(${num + 1}º) População com ${array[num].population.toLocaleString('pt-BR')}<br>`
-                    info.innerHTML += `${textPosArea}Área de ${array[num].area.toLocaleString('pt-BR')} Km²<br>`
-                    info.innerHTML += texto
+                    info.innerHTML += `População com ${array[num].population.toLocaleString('pt-BR')}  (${num + 1}º)<br>`
+                    info.innerHTML += `Área de ${array[num].area.toLocaleString('pt-BR')} Km²  ${textPosArea}<br>`
+                    info.innerHTML += `Idioma: ${idioma}`
                     if (array[num].coatOfArms.svg !== undefined) brasao.src = array[num].coatOfArms.svg
                 }
             )
