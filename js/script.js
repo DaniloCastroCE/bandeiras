@@ -17,7 +17,7 @@ const getApiMult = async (urls, callback) => {
             urls = [urls];
         }
 
-        const responses = await Promise.all(urls.map(url => fetch(url)));
+        const responses = await Promise.all(urls.map(url => fetch(url.url)));
 
         responses.forEach(response => {
             if (!response.ok) {
@@ -26,8 +26,15 @@ const getApiMult = async (urls, callback) => {
         });
 
         const data = await Promise.all(responses.map(response => response.json()));
+        //callback(data);
 
-        callback(data);
+        const result = data.map((item, index) => ({
+            ...item,
+            traduzir: urls[index].traduzir
+        }))
+
+        callback(result);
+
     } catch (err) {
         console.error(`Erro na função getApi.\nErro: ${err}`);
     }
@@ -158,9 +165,9 @@ const gerarBandeira = (array) => {
                 }
             )
 
-            let urls = [`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].region)}&langpair=en|pt`]
+            let urls = [{traduzir:"region",url:`https://api.mymemory.translated.net/get?q=${encodeURIComponent(array[num].region)}&langpair=en|pt`}]
             for (let i = 0; i < Object.keys(array[num].languages).length; i++) {
-                urls.push(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].languages)[i])}&langpair=en|pt`)
+                urls.push({traduzir:"languages",url:`https://api.mymemory.translated.net/get?q=${encodeURIComponent(Object.values(array[num].languages)[i])}&langpair=en|pt`})
             }
 
             //console.log(urls)
@@ -170,7 +177,13 @@ const gerarBandeira = (array) => {
             getApiMult(
                 urls,
                 (result) => {
+                    //console.log(result)
                     let texto = ''
+                    let idioma = ''
+                    
+                    const region = result.filter(obj => obj.traduzir === 'region')
+                    const languages = result.filter(obj => obj.traduzir === 'languages')
+
                     result.forEach((textInfo, index) => {
                         if (index === 0) {
                             const regiao = (textInfo.responseData.translatedText === 'África:') ? 'África' : textInfo.responseData.translatedText
@@ -187,6 +200,25 @@ const gerarBandeira = (array) => {
                         }
                     })
                     //console.log(texto)
+
+                    languages.forEach( (el, index) => {
+                        const traduzido = el.responseData.translatedText
+                        if(languages.length === 1){
+                            idioma += ` ${traduzido.charAt(0).toUpperCase() + traduzido.slice(1).toLowerCase()}`
+                        }else {
+                            idioma += ` ${traduzido.charAt(0).toUpperCase() + traduzido.slice(1).toLowerCase()}`
+                            
+                            if(index + 2  < languages.length){
+                                idioma += ','  
+                            }else if(index + 2 === languages.length){
+                                idioma += 'e'
+                            }
+                        }
+                        console.log(`Index ${index} + 2 | length ${languages.length}`)
+                    } )
+
+                    console.log(idioma)
+
                     const pos = posAreaPais(areaOrdenada, nomeIngles)
                     const textPosArea = (pos > 0) ? `(${pos}º) ` : ''
                     info.innerHTML += `${nomeIngles}<br>`
